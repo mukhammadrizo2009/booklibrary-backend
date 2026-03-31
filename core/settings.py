@@ -30,6 +30,9 @@ DEBUG = os.getenv("DEBUG")
 
 ALLOWED_HOSTS = ['*']
 
+# Ensure Django uses 'https' in absolute URLs when behind a proxy
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
 
 # Application definition
 
