@@ -38,6 +38,7 @@ USE_X_FORWARDED_HOST = True
 # Application definition
 
 INSTALLED_APPS = [
+    'whitenoise.runserver_nostatic',
     'unfold',
     'unfold.contrib.filters',
     'unfold.contrib.forms',
