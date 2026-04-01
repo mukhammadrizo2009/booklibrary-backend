@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'apps.books.apps.BooksConfig',
     'apps.library.apps.LibraryConfig',
     'apps.social.apps.SocialConfig',
+    'apps.pages.apps.PagesConfig',
 ]
 
 MIDDLEWARE = [
