@@ -28,8 +28,15 @@ SECRET_KEY =os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG")
 
+# ALLOWED_HOSTS should include the EC2 IP and Vercel domain
 _allowed = os.getenv("ALLOWED_HOSTS", "")
-ALLOWED_HOSTS = [h.strip() for h in _allowed.split(",") if h.strip()] if _allowed else ["*"]
+ALLOWED_HOSTS = [h.strip() for h in _allowed.split(",") if h.strip()] if _allowed else [
+    "13.48.42.28",
+    "libsphere.vercel.app",
+    "libsphere.uz",
+    "localhost",
+    "127.0.0.1"
+]
 
 # Ensure Django uses 'https' in absolute URLs when behind a proxy
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -174,10 +181,17 @@ REST_FRAMEWORK = {
     ],
 }
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = False
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    "http://localhost:5173", # standard Vite port
+    "https://libsphere.uz",
+    "https://libsphere.vercel.app",
+]
+
+# CRITICAL: CSRF protection for cross-domain requests
+CSRF_TRUSTED_ORIGINS = [
     "https://libsphere.uz",
     "https://libsphere.vercel.app",
 ]
