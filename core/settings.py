@@ -176,6 +176,12 @@ REST_FRAMEWORK = {
 
 CORS_ALLOW_ALL_ORIGINS = True
 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "https://libsphere.uz",
+    "https://libsphere.vercel.app",
+]
+
 UNFOLD = {
     "SITE_TITLE": "LibSphere Admin",
     "SITE_HEADER": "LibSphere",
