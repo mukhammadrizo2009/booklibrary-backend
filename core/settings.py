@@ -35,6 +35,7 @@ ALLOWED_HOSTS = [h.strip() for h in _allowed.split(",") if h.strip()] if _allowe
     "13.48.42.28",
     "libsphere.vercel.app",
     "libsphere.uz",
+    "www.libsphere.uz",
     "localhost",
     "127.0.0.1"
 ]
@@ -200,12 +201,14 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:5173", # standard Vite port
     "https://libsphere.uz",
+    "https://www.libsphere.uz",
     "https://libsphere.vercel.app",
 ]
 
 # CRITICAL: CSRF protection for cross-domain requests
 CSRF_TRUSTED_ORIGINS = [
     "https://libsphere.uz",
+    "https://www.libsphere.uz",
     "https://libsphere.vercel.app",
 ]
 
