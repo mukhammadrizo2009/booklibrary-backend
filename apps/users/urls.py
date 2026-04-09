@@ -1,6 +1,11 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import UserViewSet, LoginView, RegisterView
+from .views import (
+    UserViewSet, 
+    LoginView, 
+    RegisterView, 
+    SupabaseGoogleLoginView
+)
 
 router = DefaultRouter()
 router.register(r'leaderboard', UserViewSet, basename='leaderboard')
@@ -8,5 +13,6 @@ router.register(r'leaderboard', UserViewSet, basename='leaderboard')
 urlpatterns = [
     path('auth/login/', LoginView.as_view(), name='login'),
     path('auth/register/', RegisterView.as_view(), name='register'),
+    path('auth/google/', SupabaseGoogleLoginView.as_view(), name='google-login'),
     path('', include(router.urls)),
 ]

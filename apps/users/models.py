@@ -14,6 +14,8 @@ class User(AbstractUser):
         symmetrical=False,
         related_name='follower_users'
     )
+    is_pro = models.BooleanField(default=False, verbose_name='PRO status')
+
 
     def __str__(self):
         return self.username

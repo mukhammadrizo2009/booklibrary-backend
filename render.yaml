@@ -17,6 +17,12 @@ services:
         generateValue: true
       - key: DEBUG
         value: "False"
+      - key: ALLOWED_HOSTS
+        value: "libsphere.uz,www.libsphere.uz,api.libsphere.uz"
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
 
 databases:
   - name: libsphere-db

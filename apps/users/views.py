@@ -4,6 +4,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import get_user_model, authenticate
+from django.conf import settings
+import requests
 from .serializers import UserSerializer, RegisterSerializer
 
 User = get_user_model()
@@ -24,8 +26,10 @@ class RegisterView(APIView):
                 'token': token.key, 
                 'username': user.username, 
                 'id': user.id,
-                'profile_picture': pic_url
+                'profile_picture': pic_url,
+                'is_pro': user.is_pro
             }, status=status.HTTP_201_CREATED)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -53,9 +57,68 @@ class LoginView(APIView):
                 'token': token.key, 
                 'username': user.username, 
                 'id': user.id,
-                'profile_picture': pic_url
+                'profile_picture': pic_url,
+                'is_pro': user.is_pro
             })
+
         return Response({'error': 'Invalid username/email or password'}, status=status.HTTP_400_BAD_REQUEST)
+
+@method_decorator(csrf_exempt, name='dispatch')
+class SupabaseGoogleLoginView(APIView):
+    permission_classes = [permissions.AllowAny]
+    def post(self, request):
+        access_token = request.data.get('access_token')
+        if not access_token:
+            return Response({"error": "No access_token provided."}, status=400)
+            
+        supabase_url = getattr(settings, 'SUPABASE_URL', '')
+        supabase_anon_key = getattr(settings, 'SUPABASE_ANON_KEY', '')
+        
+        headers = {
+            'Authorization': f'Bearer {access_token}',
+            'apikey': supabase_anon_key
+        }
+        res = requests.get(f"{supabase_url}/auth/v1/user", headers=headers)
+        if res.status_code != 200:
+            return Response({"error": "Invalid Supabase token"}, status=401)
+            
+        user_data = res.json()
+        email = user_data.get('email')
+        
+        if not email:
+            return Response({"error": "No email in token"}, status=400)
+            
+        # Get or create user safely
+        full_name = user_data.get('user_metadata', {}).get('full_name', '')
+        first_name = full_name.split(' ')[0] if full_name else email.split('@')[0]
+        
+        user = User.objects.filter(email=email).first()
+        if not user:
+            username_base = email.split('@')[0]
+            username = username_base
+            counter = 1
+            while User.objects.filter(username=username).exists():
+                username = f"{username_base}{counter}"
+                counter += 1
+                
+            user = User.objects.create(
+                email=email,
+                username=username,
+                first_name=first_name,
+                is_active=True
+            )
+            user.set_unusable_password()
+            user.save()
+            
+        token, _ = Token.objects.get_or_create(user=user)
+        pic_url = request.build_absolute_uri(user.profile_picture.url) if user.profile_picture else None
+        return Response({
+            'token': token.key, 
+            'username': user.username, 
+            'id': user.id,
+            'profile_picture': pic_url,
+            'is_pro': user.is_pro
+        })
 
 from django.utils import timezone
 from datetime import timedelta
@@ -139,3 +202,8 @@ class UserViewSet(viewsets.ModelViewSet):
             "is_following": is_following, 
             "followers_count": followers_count
         })
+
+    @action(detail=False, methods=['get'], permission_classes=[permissions.IsAuthenticated])
+    def me(self, request):
+        serializer = self.get_serializer(request.user)
+        return Response(serializer.data)

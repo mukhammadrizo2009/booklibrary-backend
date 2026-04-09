@@ -1,7 +1,7 @@
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import AllowAny
-from .models import TeamMember, MissionSection
-from .serializers import TeamMemberSerializer, MissionSerializer
+from .models import TeamMember, MissionSection, SubscriptionPlan
+from .serializers import TeamMemberSerializer, MissionSerializer, SubscriptionPlanSerializer
 
 
 class TeamMemberListView(ListAPIView):
@@ -26,3 +26,8 @@ class MissionListView(ListAPIView):
         context = super().get_serializer_context()
         context['request'] = self.request
         return context
+class SubscriptionPlanListView(ListAPIView):
+    """Public endpoint — returns all active subscription plans."""
+    permission_classes = [AllowAny]
+    serializer_class = SubscriptionPlanSerializer
+    queryset = SubscriptionPlan.objects.filter(is_active=True).order_by('order')

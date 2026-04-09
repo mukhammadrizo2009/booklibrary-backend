@@ -169,6 +169,7 @@ APPEND_SLASH = False
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [BASE_DIR / 'static']
 STORAGES = {
     "default": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
@@ -218,6 +219,15 @@ UNFOLD = {
     "SITE_TITLE": "LibSphere Admin",
     "SITE_HEADER": "LibSphere",
     "SITE_SYMBOL": "speed", # icon name from Google Material Symbols
+    "SITE_FAVICONS": [
+        {
+            "rel": "icon",
+            "href": lambda request: "/static/favicon.ico",
+        }
+    ],
     "SHOW_HISTORY": True, 
     "SHOW_VIEW_ON_SITE": True,
 }
+
+SUPABASE_URL = os.getenv("SUPABASE_URL", "")
+SUPABASE_ANON_KEY = os.getenv("SUPABASE_ANON_KEY", "")

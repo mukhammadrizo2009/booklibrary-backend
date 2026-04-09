@@ -1,6 +1,8 @@
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from apps.users.permissions import IsProUser
+
 from django.db.models import Q
 from django.contrib.auth import get_user_model
 from .models import Follow, Activity, Message, MessageReaction, Post, PostLike, PostComment, AdBanner
@@ -23,7 +25,8 @@ class ActivityViewSet(viewsets.ReadOnlyModelViewSet):
 
 class MessageViewSet(viewsets.ModelViewSet):
     serializer_class = MessageSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsProUser]
+
 
     def get_queryset(self):
         user = self.request.user

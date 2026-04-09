@@ -1,6 +1,6 @@
 from unfold.admin import ModelAdmin
 from django.contrib import admin
-from .models import TeamMember, MissionSection
+from .models import TeamMember, MissionSection, SubscriptionPlan
 
 
 @admin.register(TeamMember)
@@ -39,5 +39,29 @@ class MissionSectionAdmin(ModelAdmin):
         }),
         ('Translations', {
             'fields': ('description_uz', 'description_ru', 'description_en'),
+        }),
+    )
+@admin.register(SubscriptionPlan)
+class SubscriptionPlanAdmin(ModelAdmin):
+    list_display = ('name_uz', 'price_uzs', 'price_usd', 'order', 'is_active', 'is_free', 'is_most_popular')
+    list_editable = ('order', 'is_active', 'is_most_popular', 'is_free')
+    list_filter = ('is_active', 'is_free', 'is_most_popular')
+    search_fields = ('name_uz', 'name_ru', 'name_en')
+
+    fieldsets = (
+        ('Uzbek (UZ)', {
+            'fields': ('name_uz', 'description_uz', 'period_uz', 'features_uz', 'badge_text_uz', 'button_text_uz'),
+        }),
+        ('Russian (RU)', {
+            'fields': ('name_ru', 'description_ru', 'period_ru', 'features_ru', 'badge_text_ru', 'button_text_ru'),
+        }),
+        ('English (EN)', {
+            'fields': ('name_en', 'description_en', 'period_en', 'features_en', 'badge_text_en', 'button_text_en'),
+        }),
+        ('Pricing', {
+            'fields': ('price_uzs', 'price_usd', 'is_free'),
+        }),
+        ('Settings', {
+            'fields': ('is_most_popular', 'is_recommended', 'order', 'is_active'),
         }),
     )

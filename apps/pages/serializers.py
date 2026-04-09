@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import TeamMember, MissionSection
+from .models import TeamMember, MissionSection, SubscriptionPlan
 
 
 class MissionSerializer(serializers.ModelSerializer):
@@ -38,3 +38,7 @@ class TeamMemberSerializer(serializers.ModelSerializer):
         if request:
             return request.build_absolute_uri(obj.avatar.url)
         return obj.avatar.url
+class SubscriptionPlanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SubscriptionPlan
+        fields = '__all__'
