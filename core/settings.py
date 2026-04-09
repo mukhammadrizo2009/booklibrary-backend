@@ -161,7 +161,7 @@ USE_I18N = True
 
 USE_TZ = True
 
-APPEND_SLASH = False
+APPEND_SLASH = True
 
 
 # Static files (CSS, JavaScript, Images)
