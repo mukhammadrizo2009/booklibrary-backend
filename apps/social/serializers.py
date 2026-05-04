@@ -51,10 +51,8 @@ class MessageSerializer(serializers.ModelSerializer):
         read_only_fields = ['sender', 'is_read', 'is_edited', 'created_at', 'updated_at', 'reply_preview', 'reactions']
 
     def get_sender_picture(self, obj):
-        request = self.context.get('request')
         if obj.sender.profile_picture and hasattr(obj.sender.profile_picture, 'url'):
-            url = obj.sender.profile_picture.url
-            return request.build_absolute_uri(url) if request else url
+            return obj.sender.profile_picture.url
         return None
 
     def get_reply_preview(self, obj):
@@ -76,10 +74,8 @@ class PostCommentSerializer(serializers.ModelSerializer):
         read_only_fields = ['user', 'created_at']
 
     def get_profile_picture(self, obj):
-        request = self.context.get('request')
         if obj.user.profile_picture and hasattr(obj.user.profile_picture, 'url'):
-            url = obj.user.profile_picture.url
-            return request.build_absolute_uri(url) if request else url
+            return obj.user.profile_picture.url
         return None
 
 class PostSerializer(serializers.ModelSerializer):
@@ -103,17 +99,13 @@ class PostSerializer(serializers.ModelSerializer):
         read_only_fields = ['user', 'created_at']
 
     def get_profile_picture(self, obj):
-        request = self.context.get('request')
         if obj.user.profile_picture and hasattr(obj.user.profile_picture, 'url'):
-            url = obj.user.profile_picture.url
-            return request.build_absolute_uri(url) if request else url
+            return obj.user.profile_picture.url
         return None
 
     def get_book_cover(self, obj):
-        request = self.context.get('request')
         if obj.book and obj.book.cover_image and hasattr(obj.book.cover_image, 'url'):
-            url = obj.book.cover_image.url
-            return request.build_absolute_uri(url) if request else url
+            return obj.book.cover_image.url
         return None
 
     def get_is_liked(self, obj):

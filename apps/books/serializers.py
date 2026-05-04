@@ -17,11 +17,17 @@ class BookSerializer(serializers.ModelSerializer):
     user_reading_status = serializers.SerializerMethodField()
     average_rating = serializers.SerializerMethodField()
     reviews_count = serializers.SerializerMethodField()
-    
+    cover_image = serializers.SerializerMethodField()
+
     class Meta:
         model = Book
         fields = '__all__'
         read_only_fields = ['added_by', 'slug']
+
+    def get_cover_image(self, obj):
+        if obj.cover_image:
+            return obj.cover_image.url
+        return None
 
     def get_user_reading_status(self, obj):
         request = self.context.get('request')
@@ -47,9 +53,6 @@ class ReviewSerializer(serializers.ModelSerializer):
     
     def get_user_profile_picture(self, obj):
         if obj.user.profile_picture:
-            request = self.context.get('request')
-            if request:
-                return request.build_absolute_uri(obj.user.profile_picture.url)
             return obj.user.profile_picture.url
         return None
     

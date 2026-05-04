@@ -9,11 +9,17 @@ class UserSerializer(serializers.ModelSerializer):
     following_count = serializers.IntegerField(source='following_users.count', read_only=True)
     books_read_count = serializers.SerializerMethodField()
     is_following = serializers.SerializerMethodField()
+    profile_picture = serializers.SerializerMethodField()
 
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'first_name', 'last_name', 'date_of_birth', 'bio', 'profile_picture', 'points', 'total_pages_read', 'followers_count', 'following_count', 'books_read_count', 'is_following', 'is_pro']
         read_only_fields = ['points', 'total_pages_read', 'is_pro']
+
+    def get_profile_picture(self, obj):
+        if obj.profile_picture:
+            return obj.profile_picture.url
+        return None
 
 
     def get_is_following(self, obj):
